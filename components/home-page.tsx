@@ -56,17 +56,20 @@ export function HomePage() {
                 connected home.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="bg-white text-blue-900 hover:bg-blue-50">
-                  Shop Now
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-white text-white hover:bg-white hover:text-blue-900 bg-transparent"
-                >
-                  View Categories
-                </Button>
+                  <Button size="lg" asChild className="bg-white text-blue-900 hover:bg-blue-50">
+                    <Link href="/store" className="flex items-center gap-2">
+                      Shop Now
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    asChild
+                    className="border-white text-white hover:bg-white hover:text-blue-900 bg-transparent"
+                  >
+                    <Link href="/categories">View Categories</Link>
+                  </Button>
               </div>
             </div>
             <div className="relative">
