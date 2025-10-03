@@ -2,6 +2,8 @@
 
 import { useState, useContext } from "react"
 import { CartContext } from "@/components/store"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/lib/auth"
 import Image from "next/image"
 import { ShoppingCart, Heart, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -30,6 +32,8 @@ export function ProductCard({ product }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false)
   const [isWishlisted, setIsWishlisted] = useState(false)
   const cart = useContext(CartContext)
+  const { user } = useAuth()
+  const router = useRouter()
 
   const formatPrice = (price: number) => {
     return `LKR ${price.toLocaleString()}`
@@ -79,7 +83,13 @@ export function ProductCard({ product }: ProductCardProps) {
           <Button
             className="w-full"
             disabled={!product.inStock}
-            onClick={() => cart.addToCart({ ...product, quantity: 1 })}
+            onClick={() => {
+              if (!user) {
+                router.push('/login')
+                return
+              }
+              cart.addToCart({ ...product, quantity: 1 })
+            }}
           >
             <ShoppingCart className="h-4 w-4 mr-2" />
             Add to Cart

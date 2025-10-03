@@ -1,14 +1,16 @@
 "use client"
 import { useState } from "react"
+import { useAuth } from "@/lib/auth"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 
-const paymentMethods = ["Credit Card", "Debit Card", "PayPal", "Cash on Delivery"]
-
-import { useRouter } from "next/navigation"
+const paymentMethods = ["Credit Card", "Debit Card", "PayPal", "Cash on Delivery", "Bank Transfer"]
 
 export default function CartPage() {
   const [selectedMethod, setSelectedMethod] = useState(paymentMethods[0])
   const router = useRouter()
+  const { user } = useAuth()
+  const [showBankDetails, setShowBankDetails] = useState(false)
 
 
   // Editable cart items
@@ -82,13 +84,38 @@ export default function CartPage() {
           <select
             value={selectedMethod}
             onChange={e => setSelectedMethod(e.target.value)}
-            className="border rounded px-3 py-2 mb-4 focus:ring-2 focus:ring-blue-500"
+            className="border rounded px-3 py-2 mb-4 focus:ring-2 focus:ring-blue-500 bg-background text-foreground"
           >
             {paymentMethods.map(method => (
               <option key={method} value={method}>{method}</option>
             ))}
           </select>
-          <Button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-2 text-lg shadow-md hover:scale-105 transition-transform">Proceed to Payment</Button>
+          <Button
+            className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-2 text-lg shadow-md hover:scale-105 transition-transform"
+            onClick={() => {
+              if (!user) {
+                router.push('/login')
+                return
+              }
+              if (selectedMethod === 'Bank Transfer') {
+                setShowBankDetails(true)
+                return
+              }
+              // Proceed with other payment methods (placeholder)
+              alert(`Proceeding to payment via ${selectedMethod}`)
+            }}
+          >
+            Proceed to Payment
+          </Button>
+          {showBankDetails && (
+            <div className="mt-4 p-4 bg-background/80 rounded">
+              <h3 className="font-semibold mb-2">Bank Transfer Details</h3>
+              <p className="text-sm text-muted-foreground">Bank: Example Bank</p>
+              <p className="text-sm text-muted-foreground">Account Name: NextWave Gadgets</p>
+              <p className="text-sm text-muted-foreground">Account Number: 1234567890</p>
+              <p className="text-sm text-muted-foreground">Branch: Colombo</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
