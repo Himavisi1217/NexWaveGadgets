@@ -1,10 +1,23 @@
 import React, { createContext, useState } from "react";
 
-export const CartContext = createContext({
+type CartItem = {
+  id: string;
+  quantity: number;
+  [key: string]: any;
+};
+
+type CartContextType = {
+  cartItems: CartItem[];
+  addToCart: (product: CartItem) => void;
+  updateQuantity: (id: string, delta: number) => void;
+  deleteItem: (id: string) => void;
+};
+
+export const CartContext = createContext<CartContextType>({
   cartItems: [],
-  addToCart: (product: any) => {},
-  updateQuantity: (id: string, delta: number) => {},
-  deleteItem: (id: string) => {},
+  addToCart: () => {},
+  updateQuantity: () => {},
+  deleteItem: () => {},
 });
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
